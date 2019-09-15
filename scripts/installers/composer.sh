@@ -4,8 +4,8 @@ DIR=`dirname $0`
 COMPOSER_ALIAS=${1:-'composer'}
 COMPOSER_TAG=${2:-'latest'}
 
-COMPOSER_HOME="$HOME/.config/composer-${COMPOSER_TAG}/"
-COMPOSER_CACHE_DIR="$HOME/.cache/composer-${COMPOSER_TAG}/"
+COMPOSER_HOME="$HOME/.config/composer-${COMPOSER_TAG}"
+COMPOSER_CACHE_DIR="$HOME/.cache/composer-${COMPOSER_TAG}"
 
 echo "Pulling composer:$COMPOSER_TAG from Docker Hub"
 docker pull "composer:$COMPOSER_TAG"
