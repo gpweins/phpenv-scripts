@@ -1,11 +1,14 @@
 #!/bin/bash
 
 DIR=`dirname $0`
-COMPOSER_HOME=~/.config/composer
-COMPOSER_CACHE_DIR=~/.cache/composer
-COMPOSER_ALIAS='composer'
+COMPOSER_ALIAS=${1:-'composer'}
+COMPOSER_TAG=${2:-'latest'}
 
-docker pull composer:latest
+COMPOSER_HOME="$HOME/.config/composer-${COMPOSER_TAG}/"
+COMPOSER_CACHE_DIR="$HOME/.cache/composer-${COMPOSER_TAG}/"
+
+echo "Pulling composer:$COMPOSER_TAG from Docker Hub"
+docker pull "composer:$COMPOSER_TAG"
 
 if [ ! -d "$COMPOSER_HOME" ]; then
     mkdir "$COMPOSER_HOME"
@@ -16,8 +19,9 @@ if [ ! -d "$COMPOSER_CACHE_DIR" ]; then
 fi
 
 echo "Copying docker-composer.sh script to $COMPOSER_HOME/"
-cp "$DIR/../runners/docker-composer.sh" "$COMPOSER_HOME/docker-composer"
-chmod u+x "$COMPOSER_HOME/docker-composer"
+cp "$DIR/../runners/docker-composer.sh" "$COMPOSER_HOME/docker-composer-${COMPOSER_TAG}"
+sed -i "s|COMPOSER_TAG|$COMPOSER_TAG|g" "$COMPOSER_HOME/docker-composer-${COMPOSER_TAG}"
+chmod u+x "$COMPOSER_HOME/docker-composer-${COMPOSER_TAG}"
 
 echo "Checking for $COMPOSER_ALIAS alias..."
 if [ ! -f ~/.bash_aliases ]; then
@@ -31,7 +35,7 @@ if [ $missing_alias = 1 ]; then
     if [ -s ~/.bash_aliases ]; then
         echo >> ~/.bash_aliases
     fi
-    printf "alias $COMPOSER_ALIAS=$COMPOSER_HOME/docker-composer" >> ~/.bash_aliases
+    printf "alias $COMPOSER_ALIAS=$COMPOSER_HOME/docker-composer-${COMPOSER_TAG}" >> ~/.bash_aliases
 else
     echo "Alias $COMPOSER_ALIAS already exist!"
 fi

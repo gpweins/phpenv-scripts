@@ -10,4 +10,4 @@ docker run -it --rm \
   --volume $COMPOSER_CACHE_DIR:$COMPOSER_CACHE_DIR \
   --volume $PWD:/app \
   --user $(id -u):$(id -g) \
-  composer "$@"
+  composer:COMPOSER_TAG "$@"
